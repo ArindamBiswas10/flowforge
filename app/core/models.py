@@ -34,3 +34,20 @@ class PipelineCreate(BaseModel):
     description: str = ""
     nodes: list[Node]
     edges: list[Edge]
+
+class RunStatus(str, Enum):
+    QUEUED = "queued"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+class PipelineRun(BaseModel):
+    id: str
+    pipeline_id: str
+    status: RunStatus = RunStatus.QUEUED
+    error: str = None
+
+
+class RunCreate(BaseModel):
+    inputs: dict[str, Any] = {}

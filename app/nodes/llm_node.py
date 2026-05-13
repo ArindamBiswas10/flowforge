@@ -17,7 +17,7 @@ async def execute(config: dict, context: dict) -> dict:
         raise ValueError("LLMNode ko 'prompt_node' ya 'prompt' chahiye config mein.")
 
     payload = {
-        "model": config.get("model", "llama3-8b-8192"),
+        "model": config.get("model", "llama-3.3-70b-versatile"),
         "temperature": config.get("temperature", 0.7),
         "max_tokens": config.get("max_tokens", 512),
         "messages": [
@@ -32,7 +32,9 @@ async def execute(config: dict, context: dict) -> dict:
             json=payload,
             headers={"Authorization": f"Bearer {api_key}"},
         )
-        response.raise_for_status()
+        if response.status_code != 200:
+            print("Groq error:", response.text)
+            response.raise_for_status()
         data = response.json()
 
     return {
